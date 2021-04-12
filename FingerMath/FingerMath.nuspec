@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>FingerMath</id>
+    <version>1.0.0</version>
+    <title>FingerMath</title>
+    <authors>ApmeM</authors>
+    <owners>ApmeM</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FingerMath is a math helpers for .net projects.</description>
+    <copyright>Copyright © ApmeM 2019</copyright>
+    <dependencies>
+      <group targetFramework="netstandard2.0">
+      </group>
+    </dependencies>
+    <repository type="git" url="https://github.com/ApmeM/FingerMath.git" />        
+  </metadata>
+  <files>
+     <file src="bin\Release\netstandard2.0\FingerMath.dll" target="lib/netstandard2.0" />
+  </files>
+</package>
