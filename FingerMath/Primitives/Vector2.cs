@@ -26,6 +26,8 @@ namespace FingerMath.Primitives
         public float LengthQuad => this.X * this.X + this.Y * this.Y;
 
         public Vector2 Normalize() => this / this.Length;
+        
+        public float Angle => (float)Math.Atan2(this.Y, this.X);
 
         public static Vector2 operator +(Vector2 a, Vector2 b)
             => new Vector2(a.X + b.X, a.Y + b.Y);
@@ -45,17 +47,16 @@ namespace FingerMath.Primitives
         public static Vector2 operator /(float b, Vector2 a)
                     => new Vector2(a.X / b, a.Y / b);
 
+        public float Dot(Vector2 p2)
+        {
+            return this.X * p2.X + this.Y * p2.Y;
+        }
+
+        public float Cross(Vector2 p2)
+        {
+            return this.X * p2.Y - this.Y * p2.X;
+        }
         
-        public static float AngleBetweenVectors(Vector2 from, Vector2 to)
-        {
-            return (float)Math.Atan2(to.Y - from.Y, to.X - from.X);
-        }
-
-        public static Vector2 AngleToVector(float angleRadians, float length)
-        {
-            return new Vector2((float)Math.Cos(angleRadians) * length, (float)Math.Sin(angleRadians) * length);
-        }
-
         /// <summary>
         ///     helper for moving a value around in a circle.
         /// </summary>
@@ -141,5 +142,40 @@ namespace FingerMath.Primitives
             return new Vector2(x, y);
         }
 
+
+        public static Vector2 ClosestPointToSegment(Vector2 segP1, Vector2 segP2, Vector2 p)
+        {
+            var r = segP2 - segP1;
+            var rlen2 = r.LengthQuad;
+            if (rlen2 == 0.0)
+                return segP1;
+
+            var t = p - segP1;
+
+            var d = r.Dot(t) / rlen2;
+            if (d >= 1.0)
+                return segP2;
+            if (d <= 0.0)
+                return segP1;
+
+            return segP1 + r * d;
+        }
+
+        public static bool CheckSegsIntersect(Vector2 start1, Vector2 end1, Vector2 start2, Vector2 end2)
+        {
+            var a = end1 - start1;
+            var b = start2 - end2;
+            var d = start2 - start1;
+
+            var det = a.X * b.Y - a.Y * b.X;
+
+            if (det == 0)
+                return false;
+
+            var r = (d.X * b.Y - d.Y * b.X) / det;
+            var s = (a.X * d.Y - a.Y * d.X) / det;
+
+            return !(r < 0 || r > 1 || s < 0 || s > 1);
+        }
     }
 }
