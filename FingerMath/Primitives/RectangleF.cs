@@ -144,34 +144,6 @@ namespace FingerMath.Primitives
         }
 
         /// <summary>
-        ///     Gets whether or not the provided <see cref="Point" /> lies within the bounds of this <see cref="RectangleF" />.
-        /// </summary>
-        /// <param name="value">The coordinates to check for inclusion in this <see cref="RectangleF" />.</param>
-        /// <returns>
-        ///     <c>true</c> if the provided <see cref="Point" /> lies inside this <see cref="RectangleF" />; <c>false</c>
-        ///     otherwise.
-        /// </returns>
-        public bool Contains(Point value)
-        {
-            return this.X <= value.X && value.X < this.X + this.Width && this.Y <= value.Y
-                   && value.Y < this.Y + this.Height;
-        }
-
-        /// <summary>
-        ///     Gets whether or not the provided <see cref="Point" /> lies within the bounds of this <see cref="RectangleF" />.
-        /// </summary>
-        /// <param name="value">The coordinates to check for inclusion in this <see cref="RectangleF" />.</param>
-        /// <param name="result">
-        ///     <c>true</c> if the provided <see cref="Point" /> lies inside this <see cref="RectangleF" />;
-        ///     <c>false</c> otherwise. As an output parameter.
-        /// </param>
-        public void Contains(ref Point value, out bool result)
-        {
-            result = this.X <= value.X && value.X < this.X + this.Width && this.Y <= value.Y
-                     && value.Y < this.Y + this.Height;
-        }
-
-        /// <summary>
         ///     Gets whether or not the provided <see cref="Vector2" /> lies within the bounds of this <see cref="RectangleF" />.
         /// </summary>
         /// <param name="value">The coordinates to check for inclusion in this <see cref="RectangleF" />.</param>
@@ -373,16 +345,6 @@ namespace FingerMath.Primitives
         {
             this.X += offsetX;
             this.Y += offsetY;
-        }
-
-        /// <summary>
-        ///     Changes the <see cref="Location" /> of this <see cref="RectangleF" />.
-        /// </summary>
-        /// <param name="amount">The x and y components to add to this <see cref="RectangleF" />.</param>
-        public void Offset(Point amount)
-        {
-            this.X += amount.X;
-            this.Y += amount.Y;
         }
 
         /// <summary>

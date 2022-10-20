@@ -15,12 +15,6 @@ namespace FingerMath.Primitives
             this.Y = y;
         }
 
-        public Vector2(Point from, Point to)
-        {
-            this.X = to.X - from.X;
-            this.Y = to.Y - from.Y;
-        }
-
         public float Length => (float)Math.Sqrt(this.LengthQuad);
 
         public float LengthQuad => this.X * this.X + this.Y * this.Y;
@@ -140,42 +134,6 @@ namespace FingerMath.Primitives
             var y = damped * (float)Math.Cos(elapsedSeconds * yFrequency) * yMagnitude;
 
             return new Vector2(x, y);
-        }
-
-
-        public static Vector2 ClosestPointToSegment(Vector2 segP1, Vector2 segP2, Vector2 p)
-        {
-            var r = segP2 - segP1;
-            var rlen2 = r.LengthQuad;
-            if (rlen2 == 0.0)
-                return segP1;
-
-            var t = p - segP1;
-
-            var d = r.Dot(t) / rlen2;
-            if (d >= 1.0)
-                return segP2;
-            if (d <= 0.0)
-                return segP1;
-
-            return segP1 + r * d;
-        }
-
-        public static bool CheckSegsIntersect(Vector2 start1, Vector2 end1, Vector2 start2, Vector2 end2)
-        {
-            var a = end1 - start1;
-            var b = start2 - end2;
-            var d = start2 - start1;
-
-            var det = a.X * b.Y - a.Y * b.X;
-
-            if (det == 0)
-                return false;
-
-            var r = (d.X * b.Y - d.Y * b.X) / det;
-            var s = (a.X * d.Y - a.Y * d.X) / det;
-
-            return !(r < 0 || r > 1 || s < 0 || s > 1);
         }
     }
 }
