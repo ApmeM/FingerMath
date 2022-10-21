@@ -18,5 +18,18 @@
             Assert.AreEqual(rect.Width + 20, anotherRect.Width);
             Assert.AreEqual(rect.Height + 20, anotherRect.Height);
         }
+
+        [Test]
+        public void GetIntersectPointOnBorderTest()
+        {
+            var rect = new RectangleF(10, 10, 10, 10);
+            var pos = new Vector2(15, 15);
+            var dir = Vector2.Right;
+            
+            var result = rect.GetIntersectPointOnBorder(pos, dir);
+
+            Assert.AreEqual(20, result.X);
+            Assert.AreEqual(15, result.Y);
+        }
     }
 }

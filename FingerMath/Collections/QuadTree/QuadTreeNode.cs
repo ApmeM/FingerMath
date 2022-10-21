@@ -365,14 +365,14 @@
                     // If the search area completely contains this quad, just get every object this quad and all it's children have
                     this.GetAllObjects(ref results);
                 }
-                else if (searchRect.Intersects(this.QuadRect))
+                else if (searchRect.IsIntersects(this.QuadRect))
                 {
                     // Otherwise, if the quad isn't fully contained, only add objects that intersect with the search rectangle
                     if (this.objects != null)
                     {
                         for (var i = 0; i < this.objects.Count; i++)
                         {
-                            if (searchRect.Intersects(this.objects[i].Data.Bounds))
+                            if (searchRect.IsIntersects(this.objects[i].Data.Bounds))
                                 results.Add(this.objects[i].Data);
                         }
                     }

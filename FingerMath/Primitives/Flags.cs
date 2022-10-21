@@ -2,85 +2,40 @@
 {
     using System;
 
-    /// <summary>
-    ///     utility class to assist with dealing with bitmasks. All methods except isFlagSet expect the flag parameter to be a
-    ///     non-shifted flag.
-    ///     This lets you use plain old ints (0, 1, 2, 3, etc) to set/unset your flags.
-    /// </summary>
-    public static class Flags
+    public class Flags
     {
-        /// <summary>
-        ///     checks to see if the bit flag is set in the int. This check expects flag to be shifted already!
-        /// </summary>
-        /// <returns><c>true</c>, if flag set was ised, <c>false</c> otherwise.</returns>
-        /// <param name="self">Self.</param>
-        /// <param name="flag">Flag.</param>
-        public static bool IsFlagSet(this int self, int flag)
-        {
-            return (self & flag) != 0;
-        }
+        private int value;
 
-        /// <summary>
-        ///     checks to see if the bit flag is set in the int
-        /// </summary>
-        /// <returns><c>true</c>, if flag set was ised, <c>false</c> otherwise.</returns>
-        /// <param name="self">Self.</param>
-        /// <param name="flag">Flag.</param>
-        public static bool IsUnshiftedFlagSet(this int self, int flag)
+        public bool IsFlagSet(int flag)
         {
             flag = 1 << flag;
-            return (self & flag) != 0;
+            return (this.value & flag) != 0;
         }
 
-        /// <summary>
-        ///     sets the flag bit of the int removing any already set flags
-        /// </summary>
-        /// <param name="self">Self.</param>
-        /// <param name="flag">Flag.</param>
-        public static void SetFlagExclusive(out int self, int flag)
+        public void SetFlagExclusive(int flag)
         {
-            self = 1 << flag;
+            this.value = 1 << flag;
         }
 
-        /// <summary>
-        ///     sets the flag bit of the int
-        /// </summary>
-        /// <param name="self">Self.</param>
-        /// <param name="flag">Flag.</param>
-        public static void SetFlag(ref int self, int flag)
+        public void SetFlag(int flag)
         {
-            self = self | 1 << flag;
+            this.value = this.value | 1 << flag;
         }
 
-        /// <summary>
-        ///     unsets the flag bit of the int
-        /// </summary>
-        /// <param name="self">Self.</param>
-        /// <param name="flag">Flag.</param>
-        public static void UnsetFlag(ref int self, int flag)
+        public void UnsetFlag(int flag)
         {
             flag = 1 << flag;
-            self = self & ~flag;
+            this.value = this.value & ~flag;
         }
 
-        /// <summary>
-        ///     inverts the set bits of the int
-        /// </summary>
-        /// <param name="self">Self.</param>
-        public static void InvertFlags(ref int self)
+        public void InvertFlags()
         {
-            self = ~self;
+            this.value = ~this.value;
         }
 
-        /// <summary>
-        ///     prints the binary representation of the int. Handy for debugging int flag overlaps visually.
-        /// </summary>
-        /// <returns>The string representation.</returns>
-        /// <param name="self">Self.</param>
-        /// <param name="leftPadWidth">Left pad width.</param>
-        public static string BinaryStringRepresentation(this int self, int leftPadWidth = 10)
+        public override string ToString()
         {
-            return Convert.ToString(self, 2).PadLeft(leftPadWidth, '0');
+            return Convert.ToString(this.value, 2);
         }
     }
 }

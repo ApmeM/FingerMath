@@ -97,6 +97,11 @@
             }
         }
 
+        public static float Ease(EaseType easeType, float from, float to, float t, float duration)
+        {
+            return from + (to - from) * Ease(easeType, t, duration);
+        }
+
         public static float Ease(EaseType easeType, float t, float duration)
         {
             switch (easeType)
