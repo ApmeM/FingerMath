@@ -9,7 +9,7 @@
         [Test]
         public void AngleTest()
         {
-            var v1 = new Vector2(10, 10);
+            var v1 = new VectorF(10, 10);
 
             var angle = v1.Angle;
 
@@ -19,7 +19,7 @@
         [Test]
         public void RotateTest()
         {
-            var v1 = new Vector2(10, 10);
+            var v1 = new VectorF(10, 10);
 
             var result = v1.Rotate((float)System.Math.PI);
 
@@ -30,8 +30,8 @@
         [Test]
         public void AngleToVectorTest()
         {
-            var v1 = new Vector2(10, 10);
-            var v2 = new Vector2(-10, 10);
+            var v1 = new VectorF(10, 10);
+            var v2 = new VectorF(-10, 10);
 
             var result = v1.AngleToVector(v2);
 

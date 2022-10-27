@@ -11,7 +11,7 @@
         {
             var seg = new Segment(10, 10, 0, 0);
             
-            var p = new Vector2(20, 20);
+            var p = new VectorF(20, 20);
 
             var result = seg.FindClosestPoint(p);
 
@@ -24,7 +24,7 @@
         {
             var seg = new Segment(10, 10, 0, 0);
             
-            var p = new Vector2(5, 5);
+            var p = new VectorF(5, 5);
 
             var result = seg.FindClosestPoint(p);
 
@@ -37,7 +37,7 @@
         {
             var seg = new Segment(10, 10, 0, 0);
             
-            var p = new Vector2(4, 6);
+            var p = new VectorF(4, 6);
 
             var result = seg.FindClosestPoint(p);
 

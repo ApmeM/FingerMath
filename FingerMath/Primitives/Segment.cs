@@ -4,10 +4,10 @@ namespace FingerMath.Primitives
 {
     public struct Segment
     {
-        public Vector2 From;
-        public Vector2 To;
+        public VectorF From;
+        public VectorF To;
 
-        public Segment(Vector2 from, Vector2 to)
+        public Segment(VectorF from, VectorF to)
         {
             this.From = from;
             this.To = to;
@@ -15,11 +15,11 @@ namespace FingerMath.Primitives
 
         public Segment(float fromX, float fromY, float toX, float toY)
         {
-            this.From = new Vector2(fromX, fromY);
-            this.To = new Vector2(toX, toY);
+            this.From = new VectorF(fromX, fromY);
+            this.To = new VectorF(toX, toY);
         }
 
-        public Vector2 FindClosestPoint(Vector2 p)
+        public VectorF FindClosestPoint(VectorF p)
         {
             var r = this.To - this.From;
             var rlen2 = r.LengthQuad;
