@@ -19,9 +19,9 @@ namespace FingerMath.Primitives
 
         public bool IsEmpty => this.Width == 0 && this.Height == 0 && this.X == 0 && this.Y == 0;
 
-        public VectorF Location
+        public Vector2 Location
         {
-            get => new VectorF(this.X, this.Y);
+            get => new Vector2(this.X, this.Y);
             set
             {
                 this.X = value.X;
@@ -29,9 +29,9 @@ namespace FingerMath.Primitives
             }
         }
 
-        public VectorF Size
+        public Vector2 Size
         {
-            get => new VectorF(this.Width, this.Height);
+            get => new Vector2(this.Width, this.Height);
             set
             {
                 this.Width = value.X;
@@ -47,7 +47,7 @@ namespace FingerMath.Primitives
             this.Height = height;
         }
 
-        public RectangleF(VectorF location, VectorF size)
+        public RectangleF(Vector2 location, Vector2 size)
         {
             this.X = location.X;
             this.Y = location.Y;
@@ -60,7 +60,7 @@ namespace FingerMath.Primitives
             return this.X <= x && x < this.X + this.Width && this.Y <= y && y < this.Y + this.Height;
         }
 
-        public bool Contains(VectorF value)
+        public bool Contains(Vector2 value)
         {
             return this.Contains(value.X, value.Y);
         }
@@ -120,12 +120,12 @@ namespace FingerMath.Primitives
             return !(a == b);
         }
 
-        public VectorF GetIntersectPointOnBorder(VectorF position, VectorF direction)
+        public Vector2 GetIntersectPointOnBorder(Vector2 position, Vector2 direction)
         {
-            var p1 = new VectorF(this.Left, position.Y + direction.Y * (this.Left - position.X) / direction.X);
-            var p2 = new VectorF(this.Right, position.Y + direction.Y * (this.Right - position.X) / direction.X);
-            var p3 = new VectorF(position.X + direction.X * (this.Top - position.Y) / direction.Y, this.Top);
-            var p4 = new VectorF(position.X + direction.X * (this.Bottom - position.Y) / direction.Y, this.Bottom);
+            var p1 = new Vector2(this.Left, position.Y + direction.Y * (this.Left - position.X) / direction.X);
+            var p2 = new Vector2(this.Right, position.Y + direction.Y * (this.Right - position.X) / direction.X);
+            var p3 = new Vector2(position.X + direction.X * (this.Top - position.Y) / direction.Y, this.Top);
+            var p4 = new Vector2(position.X + direction.X * (this.Bottom - position.Y) / direction.Y, this.Bottom);
 
             if (direction.X < 0)
             {

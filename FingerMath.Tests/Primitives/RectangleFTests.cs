@@ -23,8 +23,8 @@
         public void GetIntersectPointOnBorderTest()
         {
             var rect = new RectangleF(10, 10, 10, 10);
-            var pos = new VectorF(15, 15);
-            var dir = VectorF.Right;
+            var pos = new Vector2(15, 15);
+            var dir = Vector2.Right;
             
             var result = rect.GetIntersectPointOnBorder(pos, dir);
 

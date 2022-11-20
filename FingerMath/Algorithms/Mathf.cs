@@ -1,8 +1,5 @@
 ﻿namespace FingerMath
 {
-    using System;
-    using System.Runtime.CompilerServices;
-
     public static class Mathf
     {
         public static float Clamp(float value, float min, float max)
