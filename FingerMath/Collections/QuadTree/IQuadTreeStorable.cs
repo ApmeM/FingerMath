@@ -10,6 +10,6 @@
         /// <summary>
         ///     The rectangle that defines the object's boundaries.
         /// </summary>
-        RectangleF Bounds { get; }
+        Rectangle Bounds { get; }
     }
 }

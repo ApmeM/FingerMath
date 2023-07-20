@@ -20,7 +20,7 @@
         ///     Creates a QuadTree for the specified area.
         /// </summary>
         /// <param name="quadRect">The area this QuadTree object will encompass.</param>
-        public QuadTreeNode(RectangleF quadRect)
+        public QuadTreeNode(Rectangle quadRect)
         {
             this.QuadRect = quadRect;
         }
@@ -34,10 +34,10 @@
         /// <param name="height">The height of the area rectangle.</param>
         public QuadTreeNode(int x, int y, int width, int height)
         {
-            this.QuadRect = new RectangleF(x, y, width, height);
+            this.QuadRect = new Rectangle(x, y, width, height);
         }
 
-        private QuadTreeNode(QuadTreeNode<T> parent, RectangleF rect)
+        private QuadTreeNode(QuadTreeNode<T> parent, Rectangle rect)
             : this(rect)
         {
             this.Parent = parent;
@@ -46,7 +46,7 @@
         /// <summary>
         ///     The area this QuadTree represents.
         /// </summary>
-        public RectangleF QuadRect { get; }
+        public Rectangle QuadRect { get; }
 
         /// <summary>
         ///     The top left child for this QuadTree
@@ -152,10 +152,10 @@
 
             this.TopLeftChild = new QuadTreeNode<T>(
                 this,
-                new RectangleF(this.QuadRect.Left, this.QuadRect.Top, sizeX, sizeY));
-            this.TopRightChild = new QuadTreeNode<T>(this, new RectangleF(midX, this.QuadRect.Top, sizeX, sizeY));
-            this.BottomLeftChild = new QuadTreeNode<T>(this, new RectangleF(this.QuadRect.Left, midY, sizeX, sizeY));
-            this.BottomRightChild = new QuadTreeNode<T>(this, new RectangleF(midX, midY, sizeX, sizeY));
+                new Rectangle(this.QuadRect.Left, this.QuadRect.Top, sizeX, sizeY));
+            this.TopRightChild = new QuadTreeNode<T>(this, new Rectangle(midX, this.QuadRect.Top, sizeX, sizeY));
+            this.BottomLeftChild = new QuadTreeNode<T>(this, new Rectangle(this.QuadRect.Left, midY, sizeX, sizeY));
+            this.BottomRightChild = new QuadTreeNode<T>(this, new Rectangle(midX, midY, sizeX, sizeY));
 
             // If they're completely contained by the quad, bump objects down
             for (var i = 0; i < this.objects.Count; i++)
@@ -343,7 +343,7 @@
         ///     Get the objects in this tree that intersect with the specified rectangle.
         /// </summary>
         /// <param name="searchRect">The rectangle to find objects in.</param>
-        internal List<T> GetObjects(RectangleF searchRect)
+        internal List<T> GetObjects(Rectangle searchRect)
         {
             var results = new List<T>();
             this.GetObjects(searchRect, ref results);
@@ -355,7 +355,7 @@
         /// </summary>
         /// <param name="searchRect">The rectangle to find objects in.</param>
         /// <param name="results">A reference to a list that will be populated with the results.</param>
-        internal void GetObjects(RectangleF searchRect, ref List<T> results)
+        internal void GetObjects(Rectangle searchRect, ref List<T> results)
         {
             // We can't do anything if the results list doesn't exist
             if (results != null)

@@ -2,15 +2,15 @@ namespace FingerMath.Primitives
 {
     using System;
 
-    public struct RectangleF
+    public struct Rectangle : IEquatable<Rectangle>
     {
         public float X;
         public float Y;
         public float Width;
         public float Height;
 
-        public static RectangleF Empty { get; } = new RectangleF();
-        public static RectangleF One { get; } = new RectangleF(0, 0, 1, 1);
+        public static Rectangle Empty { get; } = new Rectangle();
+        public static Rectangle One { get; } = new Rectangle(0, 0, 1, 1);
 
         public float Left => this.X;
         public float Right => this.X + this.Width;
@@ -19,9 +19,9 @@ namespace FingerMath.Primitives
 
         public bool IsEmpty => this.Width == 0 && this.Height == 0 && this.X == 0 && this.Y == 0;
 
-        public Vector2 Location
+        public Vector Location
         {
-            get => new Vector2(this.X, this.Y);
+            get => new Vector(this.X, this.Y);
             set
             {
                 this.X = value.X;
@@ -29,9 +29,9 @@ namespace FingerMath.Primitives
             }
         }
 
-        public Vector2 Size
+        public Vector Size
         {
-            get => new Vector2(this.Width, this.Height);
+            get => new Vector(this.Width, this.Height);
             set
             {
                 this.Width = value.X;
@@ -39,7 +39,7 @@ namespace FingerMath.Primitives
             }
         }
 
-        public RectangleF(float x, float y, float width, float height)
+        public Rectangle(float x, float y, float width, float height)
         {
             this.X = x;
             this.Y = y;
@@ -47,7 +47,7 @@ namespace FingerMath.Primitives
             this.Height = height;
         }
 
-        public RectangleF(Vector2 location, Vector2 size)
+        public Rectangle(Vector location, Vector size)
         {
             this.X = location.X;
             this.Y = location.Y;
@@ -60,14 +60,14 @@ namespace FingerMath.Primitives
             return this.X <= x && x < this.X + this.Width && this.Y <= y && y < this.Y + this.Height;
         }
 
-        public bool Contains(Vector2 value)
+        public bool Contains(Vector value)
         {
             return this.Contains(value.X, value.Y);
         }
 
-        public bool Contains(RectangleF value)
+        public bool Contains(Rectangle value)
         {
-            return this.Contains(value.X, value.Y) && 
+            return this.Contains(value.X, value.Y) &&
             this.Contains(value.X + value.Width, value.Y + value.Height);
         }
 
@@ -79,53 +79,53 @@ namespace FingerMath.Primitives
             this.Height += verticalAmount * 2;
         }
 
-        public bool IsIntersects(RectangleF value)
+        public bool IsIntersects(Rectangle value)
         {
             return value.Left < this.Right && this.Left < value.Right && value.Top < this.Bottom
                    && this.Top < value.Bottom;
         }
 
-        public RectangleF Intersect(RectangleF value2)
+        public Rectangle Intersect(Rectangle value2)
         {
             if (!this.IsIntersects(value2))
             {
-                return new RectangleF(0, 0, 0, 0);
+                return new Rectangle(0, 0, 0, 0);
             }
 
             var rightSide = Math.Min(this.X + this.Width, value2.X + value2.Width);
             var leftSide = Math.Max(this.X, value2.X);
             var topSide = Math.Max(this.Y, value2.Y);
             var bottomSide = Math.Min(this.Y + this.Height, value2.Y + value2.Height);
-            return new RectangleF(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
+            return new Rectangle(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
         }
 
-        public RectangleF Union(RectangleF value2)
+        public Rectangle Union(Rectangle value2)
         {
             var x = Math.Min(this.X, value2.X);
             var y = Math.Min(this.Y, value2.Y);
-            return new RectangleF(
+            return new Rectangle(
                 x,
                 y,
                 Math.Max(this.Right, value2.Right) - x,
                 Math.Max(this.Bottom, value2.Bottom) - y);
         }
 
-        public static bool operator ==(RectangleF a, RectangleF b)
+        public static bool operator ==(Rectangle a, Rectangle b)
         {
             return a.X == b.X && a.Y == b.Y && a.Width == b.Width && a.Height == b.Height;
         }
 
-        public static bool operator !=(RectangleF a, RectangleF b)
+        public static bool operator !=(Rectangle a, Rectangle b)
         {
             return !(a == b);
         }
 
-        public Vector2 GetIntersectPointOnBorder(Vector2 position, Vector2 direction)
+        public Vector GetIntersectPointOnBorder(Vector position, Vector direction)
         {
-            var p1 = new Vector2(this.Left, position.Y + direction.Y * (this.Left - position.X) / direction.X);
-            var p2 = new Vector2(this.Right, position.Y + direction.Y * (this.Right - position.X) / direction.X);
-            var p3 = new Vector2(position.X + direction.X * (this.Top - position.Y) / direction.Y, this.Top);
-            var p4 = new Vector2(position.X + direction.X * (this.Bottom - position.Y) / direction.Y, this.Bottom);
+            var p1 = new Vector(this.Left, position.Y + direction.Y * (this.Left - position.X) / direction.X);
+            var p2 = new Vector(this.Right, position.Y + direction.Y * (this.Right - position.X) / direction.X);
+            var p3 = new Vector(position.X + direction.X * (this.Top - position.Y) / direction.Y, this.Top);
+            var p4 = new Vector(position.X + direction.X * (this.Bottom - position.Y) / direction.Y, this.Bottom);
 
             if (direction.X < 0)
             {
@@ -162,6 +162,36 @@ namespace FingerMath.Primitives
         public override string ToString()
         {
             return $"X:{this.X}, Y:{this.Y}, Width: {this.Width}, Height: {this.Height}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Rectangle d && this.Equals(d);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -451377473;
+            hashCode = hashCode * -1521134295 + X.GetHashCode();
+            hashCode = hashCode * -1521134295 + Y.GetHashCode();
+            hashCode = hashCode * -1521134295 + Width.GetHashCode();
+            hashCode = hashCode * -1521134295 + Height.GetHashCode();
+            hashCode = hashCode * -1521134295 + Left.GetHashCode();
+            hashCode = hashCode * -1521134295 + Right.GetHashCode();
+            hashCode = hashCode * -1521134295 + Top.GetHashCode();
+            hashCode = hashCode * -1521134295 + Bottom.GetHashCode();
+            hashCode = hashCode * -1521134295 + IsEmpty.GetHashCode();
+            hashCode = hashCode * -1521134295 + Location.GetHashCode();
+            hashCode = hashCode * -1521134295 + Size.GetHashCode();
+            return hashCode;
+        }
+
+        public bool Equals(Rectangle d)
+        {
+            return X == d.X &&
+                   Y == d.Y &&
+                   Width == d.Width &&
+                   Height == d.Height;
         }
     }
 }

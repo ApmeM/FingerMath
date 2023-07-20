@@ -17,7 +17,7 @@
         /// Creates a QuadTree for the specified area.
         /// </summary>
         /// <param name="rect">The area this QuadTree object will encompass.</param>
-        public QuadTree(RectangleF rect)
+        public QuadTree(Rectangle rect)
         {
             this.QuadTreeRoot = new QuadTreeNode<T>(rect);
         }
@@ -31,7 +31,7 @@
         /// <param name="height">The height of the area rectangle.</param>
         public QuadTree(int x, int y, int width, int height)
         {
-            this.QuadTreeRoot = new QuadTreeNode<T>(new RectangleF(x, y, width, height));
+            this.QuadTreeRoot = new QuadTreeNode<T>(new Rectangle(x, y, width, height));
         }
 
         /// <summary>
@@ -42,13 +42,13 @@
         /// <summary>
         /// Gets the rectangle that bounds this QuadTree
         /// </summary>
-        public RectangleF QuadRect => this.QuadTreeRoot.QuadRect;
+        public Rectangle QuadRect => this.QuadTreeRoot.QuadRect;
 
         /// <summary>
         /// Get the objects in this tree that intersect with the specified rectangle.
         /// </summary>
         /// <param name="rect">The rectangle to find objects in.</param>
-        public List<T> GetObjects(RectangleF rect)
+        public List<T> GetObjects(Rectangle rect)
         {
             return this.QuadTreeRoot.GetObjects(rect);
         }
@@ -58,7 +58,7 @@
         /// </summary>
         /// <param name="rect">The rectangle to find objects in.</param>
         /// <param name="results">A reference to a list that will be populated with the results.</param>
-        public void GetObjects(RectangleF rect, ref List<T> results)
+        public void GetObjects(Rectangle rect, ref List<T> results)
         {
             this.QuadTreeRoot.GetObjects(rect, ref results);
         }

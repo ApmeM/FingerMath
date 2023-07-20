@@ -18,7 +18,7 @@ namespace FingerMath
         /// </summary>
         /// <param name="points">A list of points that defines an enclosing path.</param>
         /// <param name="arePointsCcw">Flag to know that points are ccw.</param>
-        public static List<int> Triangulate(Vector2[] points, bool arePointsCcw = true)
+        public static List<int> Triangulate(Vector[] points, bool arePointsCcw = true)
         {
             var count = points.Length;
             var triangleIndices = Pool<List<int>>.Obtain();
@@ -123,12 +123,12 @@ namespace FingerMath
         /// <param name="center">Center.</param>
         /// <param name="c">C.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsTriangleCcw(Vector2 a, Vector2 center, Vector2 c)
+        public static bool IsTriangleCcw(Vector a, Vector center, Vector c)
         {
             return Cross(center - a, c - center) < 0;
         }
 
-        public static bool TestPointTriangle(Vector2 point, Vector2 a, Vector2 b, Vector2 c)
+        public static bool TestPointTriangle(Vector point, Vector a, Vector b, Vector c)
         {
             // if point to the right of AB then outside triangle
             if (Cross(point - a, b - a) < 0f)
@@ -152,7 +152,7 @@ namespace FingerMath
         /// <param name="u">U.</param>
         /// <param name="v">V.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Cross(Vector2 u, Vector2 v)
+        public static float Cross(Vector u, Vector v)
         {
             return u.Y * v.X - u.X * v.Y;
         }

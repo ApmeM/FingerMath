@@ -9,7 +9,7 @@
         [Test]
         public void Inflate_ExtendSize()
         {
-            var rect = new RectangleF(10, 10, 10, 10);
+            var rect = new Rectangle(10, 10, 10, 10);
             var anotherRect = rect;
             anotherRect.Inflate(10, 10);
 
@@ -22,9 +22,9 @@
         [Test]
         public void GetIntersectPointOnBorderTest()
         {
-            var rect = new RectangleF(10, 10, 10, 10);
-            var pos = new Vector2(15, 15);
-            var dir = Vector2.Right;
+            var rect = new Rectangle(10, 10, 10, 10);
+            var pos = new Vector(15, 15);
+            var dir = Vector.Right;
             
             var result = rect.GetIntersectPointOnBorder(pos, dir);
 

@@ -11,7 +11,7 @@
         {
             var seg = new Segment(10, 10, 0, 0);
             
-            var p = new Vector2(20, 20);
+            var p = new Vector(20, 20);
 
             var result = seg.FindClosestPoint(p);
 
@@ -24,7 +24,7 @@
         {
             var seg = new Segment(10, 10, 0, 0);
             
-            var p = new Vector2(5, 5);
+            var p = new Vector(5, 5);
 
             var result = seg.FindClosestPoint(p);
 
@@ -37,7 +37,7 @@
         {
             var seg = new Segment(10, 10, 0, 0);
             
-            var p = new Vector2(4, 6);
+            var p = new Vector(4, 6);
 
             var result = seg.FindClosestPoint(p);
 
@@ -46,7 +46,7 @@
         }
         
         [Test]
-        public void CheckSegsIntersect_True_Test()
+        public void CheckIntersect_IntersectsInTheMiddle()
         {
             var seg = new Segment(10, 10, 0, 0);
             var seg2 = new Segment(10, 0, 0, 10);
@@ -57,7 +57,7 @@
         }
         
         [Test]
-        public void CheckSegsIntersect_False_Test()
+        public void CheckIntersect_DoesNotIntersect()
         {
             var seg = new Segment(10, 10, 0, 0);
             var seg2 = new Segment(10, 0, 6, 4);
@@ -65,6 +65,17 @@
             var result = seg.CheckIntersect(seg2);
 
             Assert.AreEqual(false, result);
+        }
+         
+        [Test]
+        public void CheckIntersect_IntersectOnEndDots()
+        {
+            var seg = new Segment(10, 10, 0, 0);
+            var seg2 = new Segment(0, 0, 6, 4);
+            
+            var result = seg.CheckIntersect(seg2);
+
+            Assert.AreEqual(true, result);
         }
     }
 }

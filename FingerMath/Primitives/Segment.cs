@@ -4,10 +4,10 @@ namespace FingerMath.Primitives
 {
     public struct Segment
     {
-        public Vector2 From;
-        public Vector2 To;
+        public Vector From;
+        public Vector To;
 
-        public Segment(Vector2 from, Vector2 to)
+        public Segment(Vector from, Vector to)
         {
             this.From = from;
             this.To = to;
@@ -15,11 +15,11 @@ namespace FingerMath.Primitives
 
         public Segment(float fromX, float fromY, float toX, float toY)
         {
-            this.From = new Vector2(fromX, fromY);
-            this.To = new Vector2(toX, toY);
+            this.From = new Vector(fromX, fromY);
+            this.To = new Vector(toX, toY);
         }
 
-        public Vector2 FindClosestPoint(Vector2 p)
+        public Vector FindClosestPoint(Vector p)
         {
             var r = this.To - this.From;
             var rlen2 = r.LengthQuad;
@@ -45,13 +45,14 @@ namespace FingerMath.Primitives
 
             var det = a.X * b.Y - a.Y * b.X;
 
-            if (det == 0)
-                return false;
+            var r = (d.X * b.Y - d.Y * b.X);
+            var s = (a.X * d.Y - a.Y * d.X);
 
-            var r = (d.X * b.Y - d.Y * b.X) / det;
-            var s = (a.X * d.Y - a.Y * d.X) / det;
-
-            return !(r < 0 || r > 1 || s < 0 || s > 1);
+            if (det > 0)
+                return !(r < 0 || r > det || s < 0 || s > det);
+            if (det < 0)
+                return !(-r < 0 || -r > -det || -s < 0 || -s > -det);
+            return false;
         }
     }
 }
