@@ -91,19 +91,13 @@ namespace FingerMath.Primitives
             int hashCode = -1274299002;
             hashCode = hashCode * -1521134295 + X.GetHashCode();
             hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            hashCode = hashCode * -1521134295 + Length.GetHashCode();
-            hashCode = hashCode * -1521134295 + LengthQuad.GetHashCode();
-            hashCode = hashCode * -1521134295 + Angle.GetHashCode();
             return hashCode;
         }
 
         public bool Equals(Vector vector)
         {
             return X == vector.X &&
-                   Y == vector.Y &&
-                   Length == vector.Length &&
-                   LengthQuad == vector.LengthQuad &&
-                   Angle == vector.Angle;
+                   Y == vector.Y;
         }
 
         /// Comparison is done by angle in CCW order from 0 to 2PI. 
