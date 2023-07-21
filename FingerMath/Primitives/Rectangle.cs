@@ -176,13 +176,6 @@ namespace FingerMath.Primitives
             hashCode = hashCode * -1521134295 + Y.GetHashCode();
             hashCode = hashCode * -1521134295 + Width.GetHashCode();
             hashCode = hashCode * -1521134295 + Height.GetHashCode();
-            hashCode = hashCode * -1521134295 + Left.GetHashCode();
-            hashCode = hashCode * -1521134295 + Right.GetHashCode();
-            hashCode = hashCode * -1521134295 + Top.GetHashCode();
-            hashCode = hashCode * -1521134295 + Bottom.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsEmpty.GetHashCode();
-            hashCode = hashCode * -1521134295 + Location.GetHashCode();
-            hashCode = hashCode * -1521134295 + Size.GetHashCode();
             return hashCode;
         }
 

@@ -7,6 +7,8 @@ namespace FingerMath.Primitives
         public Vector From;
         public Vector To;
 
+        public float LengthQuad => (this.From - this.To).LengthQuad;
+
         public Segment(Vector from, Vector to)
         {
             this.From = from;
@@ -35,6 +37,12 @@ namespace FingerMath.Primitives
                 return this.From;
 
             return this.From + r * d;
+        }
+
+        public double PointToLineDistSq(Vector fromPoint)
+        {
+            var triangle = (this.To - this.From).Cross(fromPoint - this.From);
+            return triangle * triangle / this.LengthQuad;
         }
 
         public bool CheckIntersect(Segment seg2)
