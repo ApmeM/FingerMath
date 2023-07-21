@@ -43,10 +43,9 @@ namespace FingerMath.Primitives
             var b = seg2.From - seg2.To;
             var d = seg2.From - this.From;
 
-            var det = a.X * b.Y - a.Y * b.X;
-
-            var r = (d.X * b.Y - d.Y * b.X);
-            var s = (a.X * d.Y - a.Y * d.X);
+            var det = a.Cross(b);
+            var r = d.Cross(b);
+            var s = a.Cross(d);
 
             if (det > 0)
                 return !(r < 0 || r > det || s < 0 || s > det);

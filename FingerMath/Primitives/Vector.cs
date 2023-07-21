@@ -2,7 +2,7 @@
 
 namespace FingerMath.Primitives
 {
-    public struct Vector : IEquatable<Vector>
+    public struct Vector : IEquatable<Vector>, IComparable<Vector>
     {
         public static Vector Zero = new Vector(0, 0);
         public static Vector Left = new Vector(-1, 0);
@@ -104,6 +104,27 @@ namespace FingerMath.Primitives
                    Length == vector.Length &&
                    LengthQuad == vector.LengthQuad &&
                    Angle == vector.Angle;
+        }
+
+        /// Comparison is done by angle in CCW order from 0 to 2PI. 
+        public int CompareTo(Vector other)
+        {
+            if (this.Y == 0 && other.Y == 0)
+            {
+                return Math.Sign(Math.Sign(this.X) - Math.Sign(other.X));
+            }
+
+            if ((this.Y >= 0) ^ (other.Y >= 0))
+            {
+                if (this.Y >= 0)
+                    return 1;
+                else
+                    return -1;
+            }
+            else
+            {
+                return Math.Sign((other - this).Cross(-this));
+            }
         }
     }
 }
