@@ -60,6 +60,7 @@ namespace FingerMath.Collections
                     set.Add(tuple);
                 }
             }
+
             version++;
         }
 
@@ -81,12 +82,16 @@ namespace FingerMath.Collections
             var start = startReference[key];
             while (
                 EqualityComparer<TKey>.Default.Equals(start.Value.Item1, key) &&
-                !EqualityComparer<TValue>.Default.Equals(start.Value.Item2, value))
+                !EqualityComparer<TValue>.Default.Equals(start.Value.Item2, value) &&
+                !EqualityComparer<LinkedListNode<(TKey, TValue)>>.Default.Equals(start, endReference[key]))
             {
                 start = start.next;
             }
 
-            if (!EqualityComparer<TKey>.Default.Equals(start.Value.Item1, key))
+            if (
+                !EqualityComparer<TKey>.Default.Equals(start.Value.Item1, key) ||
+                !EqualityComparer<TValue>.Default.Equals(start.Value.Item2, value)
+            )
             {
                 return;
             }
@@ -136,44 +141,34 @@ namespace FingerMath.Collections
             return startReference.ContainsKey(key);
         }
 
-        public Enumerable this[TKey key] => Find(key);
+        public Enumerable this[TKey key] => this.Find(key);
 
-        public GroupingEnumerator GetEnumerator()
-        {
-            return new GroupingEnumerator(this);
-        }
+        public GroupingEnumerator GetEnumerator() => new GroupingEnumerator(this);
 
-        private Enumerable Find(TKey key)
-        {
-            if (!startReference.ContainsKey(key))
-            {
-                return new Enumerable(null, null, 0);
-            }
+        private Enumerable Find(TKey key) => new Enumerable(this, key);
 
-            return new Enumerable(startReference[key], endReference[key], counts[key]);
-        }
         [Obsolete("Use Find instead. This method requires boxing and allocates memory.")]
-        IEnumerable<TValue> ILookup<TKey, TValue>.this[TKey key] => Find(key);
+        IEnumerable<TValue> ILookup<TKey, TValue>.this[TKey key] => this.Find(key);
 
         [Obsolete("Use GetEnumerator instead. This method requires boxing and allocates memory.")]
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         [Obsolete("Use GetEnumerator instead. This method requires boxing and allocates memory.")]
-        IEnumerator<IGrouping<TKey, TValue>> IEnumerable<IGrouping<TKey, TValue>>.GetEnumerator() => GetEnumerator();
+        IEnumerator<IGrouping<TKey, TValue>> IEnumerable<IGrouping<TKey, TValue>>.GetEnumerator() => this.GetEnumerator();
 
-        public struct Enumerable : IEnumerable<TValue>, IEnumerable, IGrouping<TKey, TValue>
+        public struct Enumerable : IEnumerable<TValue>, IEnumerable, IGrouping<TKey, TValue>, ICollection<TValue>
         {
-            private readonly LinkedListNode<(TKey, TValue)> start;
-            private readonly LinkedListNode<(TKey, TValue)> end;
-            public readonly int Count;
+            private readonly Lookup<TKey, TValue> lookup;
+            public TKey Key { get; }
 
-            public TKey Key => start.Value.Item1;
+            public int Count => this.lookup.counts.ContainsKey(this.Key) ? this.lookup.counts[this.Key] : 0;
 
-            public Enumerable(LinkedListNode<(TKey, TValue)> start, LinkedListNode<(TKey, TValue)> end, int count)
+            public bool IsReadOnly => false;
+
+            public Enumerable(Lookup<TKey, TValue> lookup, TKey key)
             {
-                this.start = start;
-                this.end = end;
-                Count = count;
+                this.lookup = lookup;
+                this.Key = key;
             }
 
             [Obsolete("Use GetEnumerator instead. This method requires boxing and allocates memory.")]
@@ -182,39 +177,65 @@ namespace FingerMath.Collections
             [Obsolete("Use GetEnumerator instead. This method requires boxing and allocates memory.")]
             IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => GetEnumerator();
 
-            public Enumerator GetEnumerator()
+            public Enumerator GetEnumerator() => new Enumerator(this.lookup, this.Key);
+
+            public void Add(TValue item)
             {
-                return new Enumerator(start, end);
+                this.lookup.Add(this.Key, item);
+            }
+
+            public void Clear()
+            {
+                this.lookup.Remove(this.Key);
+            }
+
+            public bool Contains(TValue item)
+            {
+                foreach (var el in this)
+                {
+                    if (EqualityComparer<TValue>.Default.Equals(el, item))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public void CopyTo(TValue[] array, int arrayIndex)
+            {
+                foreach (var el in this)
+                {
+                    array[arrayIndex] = el;
+                }
+            }
+
+            public bool Remove(TValue item)
+            {
+                this.lookup.Remove(this.Key, item);
+                return true;
             }
         }
 
         public struct Enumerator : IEnumerator<TValue>, IEnumerator
         {
-            private LinkedListNode<(TKey, TValue)> node;
             private readonly int version;
-            private readonly LinkedListNode<(TKey, TValue)> start;
-            private LinkedListNode<(TKey, TValue)> end;
+            private readonly Lookup<TKey, TValue> lookup;
+            private readonly TKey key;
+            private LinkedListNode<(TKey, TValue)> node;
             private TValue current;
 
             public TValue Current => current;
 
             object IEnumerator.Current => current;
 
-            internal Enumerator(LinkedListNode<(TKey, TValue)> start, LinkedListNode<(TKey, TValue)> end)
+            internal Enumerator(Lookup<TKey, TValue> lookup, TKey key)
             {
-                this.start = start;
-                this.end = end;
-                node = start;
-                current = default;
-
-                if (node == null)
-                {
-                    version = -1;
-                }
-                else
-                {
-                    version = start.List.version;
-                }
+                this.current = default;
+                this.version = lookup.version;
+                this.lookup = lookup;
+                this.key = key;
+                this.node = this.lookup.startReference.ContainsKey(key) ? this.lookup.startReference[key] : null;
             }
 
             public bool MoveNext()
@@ -224,14 +245,14 @@ namespace FingerMath.Collections
                     return false;
                 }
 
-                if (version != node.List.version)
+                if (version != lookup.version)
                 {
-                    throw new InvalidOperationException("EnumFailedVersion");
+                    throw new InvalidOperationException("The underlying collection was changed.");
                 }
 
                 current = node.Value.Item2;
 
-                if (node == end)
+                if (node == this.lookup.endReference[key])
                 {
                     node = null;
                 }
@@ -255,13 +276,15 @@ namespace FingerMath.Collections
         public struct GroupingEnumerator : IEnumerator<IGrouping<TKey, TValue>>, IEnumerator
         {
             private Lookup<TKey, TValue> lookup;
+            private int version;
             private Dictionary<TKey, LinkedListNode<(TKey, TValue)>>.Enumerator bucketEnumerator;
 
             internal GroupingEnumerator(Lookup<TKey, TValue> lookup)
             {
-                Current = default;
+                this.Current = default;
                 this.lookup = lookup;
-                bucketEnumerator = lookup.startReference.GetEnumerator();
+                this.version = this.lookup.version;
+                this.bucketEnumerator = lookup.startReference.GetEnumerator();
             }
 
             public Enumerable Current { get; set; }
@@ -274,11 +297,16 @@ namespace FingerMath.Collections
 
             public bool MoveNext()
             {
-                var result = bucketEnumerator.MoveNext();
+                if (version != this.lookup.version)
+                {
+                    throw new InvalidOperationException("The underlying collection was changed.");
+                }
+
+                var result = this.bucketEnumerator.MoveNext();
                 if (result)
                 {
-                    var key = bucketEnumerator.Current.Key;
-                    Current = new Enumerable(lookup.startReference[key], lookup.endReference[key], lookup.counts[key]);
+                    var key = this.bucketEnumerator.Current.Key;
+                    Current = new Enumerable(this.lookup, key);
                 }
                 return result;
             }
@@ -290,7 +318,7 @@ namespace FingerMath.Collections
 
             public void Dispose()
             {
-                bucketEnumerator.Dispose();
+                this.bucketEnumerator.Dispose();
             }
         }
     }
