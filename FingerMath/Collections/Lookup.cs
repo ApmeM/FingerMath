@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace FingerMath.Collections
 {
+    /// <summary>
+    /// Zero memory allocation lookup.
+    /// Copied from https://github.com/ApmeM/FingerMath/blob/master/FingerMath/Collections/Lookup.cs
+    /// </summary>
     public class Lookup<TKey, TValue> : ILookup<TKey, TValue>
     {
         private Dictionary<TKey, LinkedListNode<(TKey, TValue)>> startReference = new Dictionary<TKey, LinkedListNode<(TKey, TValue)>>();

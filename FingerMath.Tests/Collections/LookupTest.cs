@@ -57,7 +57,7 @@
             };
 
             lookup.Remove(1, 2);
-            Assert.AreEqual(1, lookup[1].Count);
+            CollectionAssert.AreEqual(new List<int> { 3 }, lookup[1]);
         }
 
         [Test]
