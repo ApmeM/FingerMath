@@ -1,6 +1,5 @@
 namespace FingerMath
 {
-    using FingerMath.Collections;
     using FingerMath.Primitives;
     using System;
     using System.Collections.Generic;
@@ -21,8 +20,7 @@ namespace FingerMath
         public static List<int> Triangulate(Vector[] points, bool arePointsCcw = true)
         {
             var count = points.Length;
-            var triangleIndices = Pool<List<int>>.Obtain();
-            triangleIndices.Clear();
+            var triangleIndices = new List<int>();
             var triPrev = new int[12];
             var triNext = new int[12];
             if (triNext.Length < count)
@@ -125,36 +123,25 @@ namespace FingerMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsTriangleCcw(Vector a, Vector center, Vector c)
         {
-            return Cross(center - a, c - center) < 0;
+            return (c - center).Cross(center - a) < 0;
         }
 
         public static bool TestPointTriangle(Vector point, Vector a, Vector b, Vector c)
         {
             // if point to the right of AB then outside triangle
-            if (Cross(point - a, b - a) < 0f)
+            if ((b - a).Cross(point - a) < 0f)
                 return false;
 
             // if point to the right of BC then outside of triangle
-            if (Cross(point - b, c - b) < 0f)
+            if ((c - b).Cross(point - b) < 0f)
                 return false;
 
             // if point to the right of ca then outside of triangle
-            if (Cross(point - c, a - c) < 0f)
+            if ((a - c).Cross(point - c) < 0f)
                 return false;
 
             // point is in or on triangle
             return true;
-        }
-
-        /// <summary>
-        ///     compute the 2d pseudo cross product Dot( Perp( u ), v )
-        /// </summary>
-        /// <param name="u">U.</param>
-        /// <param name="v">V.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Cross(Vector u, Vector v)
-        {
-            return u.Y * v.X - u.X * v.Y;
         }
     }
 }
